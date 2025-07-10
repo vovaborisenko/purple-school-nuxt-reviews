@@ -1,6 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-05-15',
+  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxt/icon'],
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxt/icon']
+  compatibilityDate: '2025-05-15',
+  eslint: {
+    config: {
+      stylistic: true,
+    },
+  },
 })
