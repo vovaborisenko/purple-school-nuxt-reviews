@@ -14,4 +14,13 @@ export default defineNuxtConfig({
       stylistic: true,
     },
   },
+  icon: {
+    mode: 'svg',
+    customCollections: [
+      {
+        prefix: 'icon',
+        dir: './assets/icons',
+      },
+    ],
+  },
 })
