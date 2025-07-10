@@ -13,20 +13,22 @@ const description = computed(() => {
 </script>
 
 <template>
-  <div class="error-page">
-    <h1 class="error-page__title">
-      {{ error?.statusCode }}
-    </h1>
-    <p class="error-page__desc">
-      {{ description }}
-    </p>
-    <AppBtn
-      :to="{ name: 'home' }"
-      class="error-page__action"
-    >
-      На главную
-    </AppBtn>
-  </div>
+  <NuxtLayout>
+    <div class="error-page">
+      <h1 class="error-page__title">
+        {{ error?.statusCode }}
+      </h1>
+      <p class="error-page__desc">
+        {{ description }}
+      </p>
+      <AppBtn
+        :to="{ name: 'home' }"
+        class="error-page__action"
+      >
+        На главную
+      </AppBtn>
+    </div>
+  </NuxtLayout>
 </template>
 
 <style>
