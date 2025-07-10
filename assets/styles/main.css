@@ -1,3 +1,5 @@
+@import './transitions';
+
 :root {
   --color-white: #ffffff;
   --color-black: #191919;
