@@ -26,6 +26,8 @@
     max-height: 100vh;
     padding: 42px 24px 21px;
     border-right: 1px solid var(--color-gray-200);
+    background-color: var(--color-white);
+    z-index: 100;
   }
 }
 </style>
