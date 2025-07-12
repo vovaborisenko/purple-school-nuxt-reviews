@@ -12,17 +12,10 @@ const { data: post } = await useAppFetch<Post>(() => `/posts/${id.value}`)
 </script>
 
 <template>
-  <div class="page">
-    <div class="container">
-      <CardPost
-        v-if="post"
-        v-bind="post"
-        class="page__post"
-      />
-    </div>
-  </div>
+  <AppPage narrow>
+    <CardPost
+      v-if="post"
+      v-bind="post"
+    />
+  </AppPage>
 </template>
-
-<style scoped>
-
-</style>
