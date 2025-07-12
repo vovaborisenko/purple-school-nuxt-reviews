@@ -1,9 +1,25 @@
 <script setup lang="ts">
+import type { Post } from '~/interfaces/post.interface'
 
+const MAX_EXCERPT_LENGTH = 156
+
+const {
+  short = false,
+  content = '',
+} = defineProps<Post & {
+  short?: boolean
+  href?: string
+}>()
+const description = computed(() => short
+  ? content.slice(0, MAX_EXCERPT_LENGTH) + (content.length > MAX_EXCERPT_LENGTH ? '...' : '')
+  : content)
 </script>
 
 <template>
-  <div class="card-post">
+  <div
+    class="card-post"
+    :class="{ 'card-post--short': short }"
+  >
     <div class="card-post__header">
       <div class="card-post__author">
         <img
@@ -13,15 +29,25 @@
         ><span class="card-post__name">PurpleSchool</span>
       </div>
       <div class="card-post__date">
-        4 дня назад
+        <NuxtTime
+          relative
+          locale="ru-RU"
+          :datetime="Date.parse(published_at)"
+        />
       </div>
     </div>
     <div class="card-post__content">
       <h2 class="card-post__title">
-        Добавить функцию голосования
+        <component
+          :is="href ? 'a' : 'span'"
+          :href="href"
+          class="card-post__title-link"
+        >
+          {{ title }}
+        </component>
       </h2>
       <p class="card-post__desc">
-        Попробовать добавить в приложение функцию голосования, которая позволит определить, какая фича более полезна, а какая нет. После добавления поста появляется...
+        {{ description }}
       </p>
     </div>
     <div class="card-post__footer">
@@ -29,13 +55,13 @@
         postfix-icon="icon:thumb-up"
         aria-label="like"
       >
-        10
+        {{ likes }}
       </CardPostAction>
       <CardPostAction
         postfix-icon="icon:thumb-down"
         aria-label="dislike"
       >
-        1
+        {{ dislikes }}
       </CardPostAction>
       <CardPostAction
         prefix-icon="icon:bin"
@@ -52,7 +78,7 @@
   </div>
 </template>
 
-<style>
+<style lang="postcss">
 .card-post {
   &__header {
     display: flex;
@@ -89,16 +115,27 @@
     color: var(--color-black);
   }
 
+  &__title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
   &__desc {
+    margin: 0;
     font-weight: 300;
     line-height: 24px;
+    white-space: pre-line;
   }
 
   &__footer {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-top: 9px;
+    margin-top: 29px;
+
+    ^&--short & {
+      margin-top: 9px;
+    }
   }
 
   &__action--remove {
