@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FetchPostsResponse } from '~/interfaces/post.interface'
+import type { FetchPostsResponse, Post } from '~/interfaces/post.interface'
 
 definePageMeta({
   name: 'home',
@@ -21,6 +21,14 @@ const activeTabId = computed(() => route.query.sort || 'date')
 const { data } = useAppFetch<FetchPostsResponse>('/posts', {
   query,
 })
+
+function updatePost(newPost: Post): void {
+  const idx = data.value?.posts.findIndex(({ id }) => id === newPost.id)
+
+  if (idx > -1) {
+    data.value.posts.splice(idx, 1, newPost)
+  }
+}
 </script>
 
 <template>
@@ -66,6 +74,7 @@ const { data } = useAppFetch<FetchPostsResponse>('/posts', {
             short
             class="posts__card"
             @click="navigate"
+            @update:post="updatePost"
           />
         </NuxtLink>
       </li>

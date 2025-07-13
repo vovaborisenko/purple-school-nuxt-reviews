@@ -1,18 +1,38 @@
 <script setup lang="ts">
 import type { Post } from '~/interfaces/post.interface'
+import { Action, useReactionsStore } from '~/stores/reactions.store'
+
+const reactionsStore = useReactionsStore()
 
 const MAX_EXCERPT_LENGTH = 156
 
 const {
+  id,
   short = false,
   content = '',
 } = defineProps<Post & {
   short?: boolean
   href?: string
 }>()
+const emits = defineEmits<{
+  'update:post': [post: Post]
+}>()
+
 const description = computed(() => short
   ? content.slice(0, MAX_EXCERPT_LENGTH) + (content.length > MAX_EXCERPT_LENGTH ? '...' : '')
   : content)
+const reaction = computed(() => reactionsStore.getPostReaction(id))
+
+async function setReaction(action: Action) {
+  try {
+    const post = await reactionsStore.setReaction(id, action)
+
+    emits('update:post', post)
+  }
+  catch {
+    console.warn(`Can't set reaction ${action} for post id: ${id}`)
+  }
+}
 </script>
 
 <template>
@@ -52,14 +72,20 @@ const description = computed(() => short
     </div>
     <div class="card-post__footer">
       <CardPostAction
+        :active="reaction === Action.Liked"
         postfix-icon="icon:thumb-up"
         aria-label="like"
+        @click.stop
+        @activate="setReaction(Action.Liked)"
       >
         {{ likes }}
       </CardPostAction>
       <CardPostAction
+        :active="reaction === Action.Disliked"
         postfix-icon="icon:thumb-down"
         aria-label="dislike"
+        @click.stop
+        @activate="setReaction(Action.Disliked)"
       >
         {{ dislikes }}
       </CardPostAction>
@@ -78,7 +104,7 @@ const description = computed(() => short
   </div>
 </template>
 
-<style lang="postcss">
+<style>
 .card-post {
   &__header {
     display: flex;
@@ -133,7 +159,7 @@ const description = computed(() => short
     gap: 16px;
     margin-top: 29px;
 
-    ^&--short & {
+    .card-post--short & {
       margin-top: 9px;
     }
   }
