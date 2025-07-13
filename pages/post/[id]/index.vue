@@ -9,20 +9,18 @@ const route = useRoute()
 const id = computed(() => route.params.id)
 
 const { data: post } = await useAppFetch<Post>(() => `/posts/${id.value}`)
+
+function updatePost(newPost: Post) {
+  post.value = newPost
+}
 </script>
 
 <template>
-  <div class="page">
-    <div class="container">
-      <CardPost
-        v-if="post"
-        v-bind="post"
-        class="page__post"
-      />
-    </div>
-  </div>
+  <AppPage narrow>
+    <CardPost
+      v-if="post"
+      v-bind="post"
+      @update:post="updatePost"
+    />
+  </AppPage>
 </template>
-
-<style scoped>
-
-</style>

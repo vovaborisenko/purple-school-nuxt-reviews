@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxt/icon'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/fonts',
+    '@nuxt/icon',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
+  ],
   devtools: {
     enabled: true,
 
@@ -17,7 +23,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   postcss: {
     plugins: {
-      'postcss-nested-ancestors': {},
       'postcss-nested': {},
     },
   },
@@ -34,5 +39,8 @@ export default defineNuxtConfig({
         dir: './assets/icons',
       },
     ],
+  },
+  piniaPluginPersistedstate: {
+    storage: 'cookies',
   },
 })
