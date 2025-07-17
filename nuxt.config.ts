@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
+    '@vee-validate/nuxt',
   ],
   devtools: {
     enabled: true,
@@ -19,6 +20,9 @@ export default defineNuxtConfig({
     public: {
       baseURL: '',
     },
+  },
+  build: {
+    transpile: ['vee-validate'],
   },
   compatibilityDate: '2025-05-15',
   postcss: {
@@ -42,5 +46,14 @@ export default defineNuxtConfig({
   },
   piniaPluginPersistedstate: {
     storage: 'cookies',
+  },
+  veeValidate: {
+    autoImports: true,
+    componentNames: {
+      Form: 'VeeForm',
+      Field: 'VeeField',
+      FieldArray: 'VeeFieldArray',
+      ErrorMessage: 'VeeErrorMessage',
+    },
   },
 })

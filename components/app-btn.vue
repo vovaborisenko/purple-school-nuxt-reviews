@@ -33,5 +33,10 @@ const componentProps = computed(() => to ? { to } : { type })
   text-align: center;
   text-decoration: none;
   color: var(--color-white);
+  transition: opacity .2s;
+
+  &[disabled] {
+    opacity: 0.8;
+  }
 }
 </style>
