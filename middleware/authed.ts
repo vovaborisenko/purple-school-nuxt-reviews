@@ -1,9 +1,7 @@
 export default defineNuxtRouteMiddleware(() => {
-  const auth = useCookie<{ token: string }>('auth', {
-    readonly: true,
-  })
+  const authStore = useAuthStore()
 
-  if (auth.value?.token) {
+  if (isTokenValid(authStore.token)) {
     return
   }
 
