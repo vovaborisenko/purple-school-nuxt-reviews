@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   name: 'post:add',
+  middleware: ['authed'],
 })
 </script>
 
