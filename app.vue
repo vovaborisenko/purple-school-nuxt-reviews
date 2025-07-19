@@ -1,3 +1,9 @@
+<script setup lang="ts">
+useHead({
+  titleTemplate: '%s | VoteApp',
+})
+</script>
+
 <template>
   <NuxtLayout>
     <NuxtPage

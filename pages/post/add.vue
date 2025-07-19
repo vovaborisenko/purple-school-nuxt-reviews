@@ -3,6 +3,10 @@ definePageMeta({
   name: 'post:add',
   middleware: ['authed'],
 })
+useSeoMeta({
+  title: 'Создание поста',
+  description: 'Описание создания поста',
+})
 </script>
 
 <template>

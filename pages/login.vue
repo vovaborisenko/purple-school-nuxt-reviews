@@ -8,6 +8,11 @@ definePageMeta({
   middleware: ['unauthed'],
 })
 
+useSeoMeta({
+  title: 'Авторизация',
+  description: 'Страница авторизации пользователя',
+})
+
 const schema = {
   email: 'required|email',
   password: 'required|min:6',

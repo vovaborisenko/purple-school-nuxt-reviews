@@ -4,6 +4,11 @@ import type { FetchPostsResponse, Post } from '~/interfaces/post.interface'
 definePageMeta({
   name: 'home',
 })
+useSeoMeta({
+  title: 'Главная',
+  description: 'Здесь вы можете просмотреть все записи',
+})
+
 const route = useRoute()
 const query = computed(() => ({
   sort: route.query.sort ?? undefined,

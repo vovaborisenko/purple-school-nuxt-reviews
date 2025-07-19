@@ -3,6 +3,11 @@ definePageMeta({
   name: 'post:edit',
   middleware: ['authed'],
 })
+
+useSeoMeta({
+  title: 'Редактирование',
+  description: 'Редактирование поста',
+})
 </script>
 
 <template>
