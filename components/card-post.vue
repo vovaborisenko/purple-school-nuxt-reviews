@@ -12,10 +12,14 @@ const {
   content = '',
 } = defineProps<Post & {
   short?: boolean
+  editable?: boolean
+  deletable?: boolean
   href?: string
 }>()
 const emits = defineEmits<{
   'update:post': [post: Post]
+  'click:edit': []
+  'click:remove': []
 }>()
 
 const description = computed(() => short
@@ -90,16 +94,26 @@ async function setReaction(action: Action) {
         {{ dislikes }}
       </CardPostAction>
       <CardPostAction
+        v-if="deletable"
         prefix-icon="icon:bin"
         aria-label="remove"
         class="card-post__action card-post__action--remove"
+        @click.stop="emits('click:remove')"
       />
-      <CardPostAction
-        prefix-icon="icon:pencil"
-        aria-label="edit"
+      <NuxtLink
+        v-if="editable"
+        :to="{ name: 'post:edit', params: { id } }"
+        class="card-post__action-wr"
       >
-        Изменить
-      </CardPostAction>
+        <CardPostAction
+          prefix-icon="icon:pencil"
+          aria-label="edit"
+          class="card-post__action"
+          @click="emits('click:edit')"
+        >
+          Изменить
+        </CardPostAction>
+      </NuxtLink>
     </div>
   </div>
 </template>
@@ -164,8 +178,16 @@ async function setReaction(action: Action) {
     }
   }
 
+  &__action {
+    display: flex;
+  }
+
   &__action--remove {
     margin-left: auto;
+  }
+
+  &__action-wr {
+    text-decoration: none;
   }
 }
 </style>

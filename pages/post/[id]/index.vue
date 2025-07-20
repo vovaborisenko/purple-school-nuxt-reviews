@@ -5,10 +5,20 @@ definePageMeta({
   name: 'post',
 })
 
+const authStore = useAuthStore()
+const { remove } = useCUDPost()
 const route = useRoute()
-const id = computed(() => route.params.id)
+const id = computed(() => route.params.id as string)
 
-const { data: post } = await useAppFetch<Post>(() => `/posts/${id.value}`)
+const { data: post, error } = await useAppFetch<Post>(() => `/posts/${id.value}`)
+
+if (error.value?.statusCode === 404) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found',
+    fatal: true,
+  })
+}
 
 useSeoMeta({
   title: post.value?.title,
@@ -18,6 +28,16 @@ useSeoMeta({
 function updatePost(newPost: Post) {
   post.value = newPost
 }
+
+async function onClickRemove() {
+  try {
+    await remove(id.value)
+    navigateTo({ name: 'home' })
+  }
+  catch {
+    alert('Something went wrong... Try again')
+  }
+}
 </script>
 
 <template>
@@ -25,7 +45,10 @@ function updatePost(newPost: Post) {
     <CardPost
       v-if="post"
       v-bind="post"
+      :deletable="authStore.isAuthed"
+      :editable="authStore.isAuthed"
       @update:post="updatePost"
+      @click:remove="onClickRemove"
     />
   </AppPage>
 </template>

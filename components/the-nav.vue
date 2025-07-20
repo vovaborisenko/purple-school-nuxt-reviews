@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+const authStore = useAuthStore()
 </script>
 
 <template>
@@ -15,6 +15,16 @@
       </li>
     </ul>
     <ul class="the-nav__bottom">
+      <li
+        v-if="authStore.isAuthed"
+        class="the-nav__item"
+      >
+        <img
+          src="/images/avatar.png"
+          alt="Author's avatar"
+          class="the-nav__avatar"
+        >
+      </li>
       <li class="the-nav__item">
         <NuxtLink
           :to="{ name: 'login' }"
@@ -54,6 +64,14 @@
       width: 24px;
       height: 24px;
     }
+  }
+
+  &__avatar {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    object-fit: cover;
   }
 }
 </style>

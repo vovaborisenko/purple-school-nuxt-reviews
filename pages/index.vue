@@ -9,6 +9,8 @@ useSeoMeta({
   description: 'Здесь вы можете просмотреть все записи',
 })
 
+const authStore = useAuthStore()
+const { remove } = useCUDPost()
 const route = useRoute()
 const query = computed(() => ({
   sort: route.query.sort ?? undefined,
@@ -23,7 +25,7 @@ const tabs = computed(() => [{
 }])
 const activeTabId = computed(() => route.query.sort || 'date')
 
-const { data } = useAppFetch<FetchPostsResponse>('/posts', {
+const { data, refresh } = useAppFetch<FetchPostsResponse>('/posts', {
   query,
 })
 
@@ -34,11 +36,31 @@ function updatePost(newPost: Post): void {
     data.value.posts.splice(idx, 1, newPost)
   }
 }
+
+async function onClickRemove(id: number) {
+  try {
+    await remove(id)
+    refresh()
+  }
+  catch {
+    alert('Something went wrong... Try again')
+  }
+}
 </script>
 
 <template>
   <AppPage class="page-home">
     <div class="page-home__header">
+      <NuxtLink
+        v-if="authStore.isAuthed"
+        :to="{ name: 'post:add' }"
+        class="page-home__creator"
+      >
+        <span
+          class="page-home__creator-ic"
+        />
+        Добавить новое обновление для голосования
+      </NuxtLink>
       <ul class="tabs">
         <li
           v-for="{ id, label } in tabs"
@@ -77,9 +99,12 @@ function updatePost(newPost: Post): void {
             v-bind="post"
             :href="href"
             short
+            :deletable="authStore.isAuthed"
+            :editable="authStore.isAuthed"
             class="posts__card"
             @click="navigate"
             @update:post="updatePost"
+            @click:remove="onClickRemove(post.id)"
           />
         </NuxtLink>
       </li>
@@ -102,6 +127,52 @@ function updatePost(newPost: Post): void {
     margin: 42px 0 38px;
     padding: 0 0 16px;
     border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  &__creator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: -4px 0 28px;
+    font-weight: 300;
+    color: var(--color-black-800);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-black);
+      transition: color .2s;
+    }
+  }
+
+  &__creator-ic {
+    position: relative;
+    display: block;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--color-gray-100);
+
+    .page-home__creator:hover & {
+      background-color: var(--color-gray-300);
+      transition: background-color .2s;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 12px;
+      height: 2px;
+      border-radius: 1px;
+      background-color: var(--color-black);
+      transform: translate(-50%, -50%);
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
   }
 
   &__pagination {
