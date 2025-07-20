@@ -10,6 +10,11 @@ const id = computed(() => route.params.id)
 
 const { data: post } = await useAppFetch<Post>(() => `/posts/${id.value}`)
 
+useSeoMeta({
+  title: post.value?.title,
+  description: post.value?.content.slice(0, 30),
+})
+
 function updatePost(newPost: Post) {
   post.value = newPost
 }
