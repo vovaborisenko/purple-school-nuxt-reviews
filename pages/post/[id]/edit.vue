@@ -29,14 +29,22 @@ async function onSubmit(values: Record<string, string>) {
   }
 }
 
-const { data: post } = await useAppFetch<Post>(() => `/posts/${id.value}`)
+const { data: post, error } = await useAppFetch<Post | null>(() => `/posts/${id.value}`)
+
+if (error.value?.statusCode === 404) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found',
+    fatal: true,
+  })
+}
 </script>
 
 <template>
   <AppPage>
     <PostEditForm
-      :title="post.title"
-      :content="post.content"
+      :title="post?.title"
+      :content="post?.content"
       @submit="onSubmit"
     />
   </AppPage>

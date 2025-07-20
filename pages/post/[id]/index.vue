@@ -10,7 +10,15 @@ const { remove } = useCUDPost()
 const route = useRoute()
 const id = computed(() => route.params.id as string)
 
-const { data: post } = await useAppFetch<Post>(() => `/posts/${id.value}`)
+const { data: post, error } = await useAppFetch<Post>(() => `/posts/${id.value}`)
+
+if (error.value?.statusCode === 404) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found',
+    fatal: true,
+  })
+}
 
 useSeoMeta({
   title: post.value?.title,
